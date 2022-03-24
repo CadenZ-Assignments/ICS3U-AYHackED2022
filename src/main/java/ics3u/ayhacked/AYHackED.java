@@ -3,7 +3,6 @@ package ics3u.ayhacked;
 import ics3u.ayhacked.events.ServerForgeEvents;
 import ics3u.ayhacked.registration.ModItems;
 import ics3u.ayhacked.water_pollution.WaterPollutionCapability;
-import mezz.jei.api.MethodsReturnNonnullByDefault;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.chunk.Chunk;
@@ -41,7 +40,7 @@ public class AYHackED {
 
         forgeEventBus.addGenericListener(Chunk.class, ServerForgeEvents::worldCapAttachEvent);
         forgeEventBus.addListener(ServerForgeEvents::itemDespawnEvent);
-        forgeEventBus.addListener(ServerForgeEvents::applyEffects);
+        forgeEventBus.addListener(ServerForgeEvents::damageFish);
         forgeEventBus.addListener(ServerForgeEvents::debug);
     }
 }
