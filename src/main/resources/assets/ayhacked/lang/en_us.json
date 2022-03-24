@@ -2,5 +2,6 @@
   "item.ayhacked.water_pollution_gauge": "Water Pollution Gauge",
   "itemGroup.ayhacked": "AYHackED2022",
   "ayhacked.message.gauge_failed": "Try using this on water near the ocean...",
-  "ayhacked.message.gauge_scanning": "Scanning... %s"
+  "ayhacked.message.gauge_scanning": "Scanning... %s",
+  "ayhacked.message.pollution_amount": "Water Pollution in Chunk: %s%%"
 }
