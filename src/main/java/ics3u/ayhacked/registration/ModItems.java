@@ -12,6 +12,7 @@ public class ModItems {
     private static final DeferredRegister<Item> ITEM_DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, AYHackED.MODID);
 
     public static final RegistryObject<Item> WaterPollutionGauge = ITEM_DEFERRED_REGISTER.register("water_pollution_gauge", WaterPollutionGauge::new);
+    public static final RegistryObject<Item> Filter = ITEM_DEFERRED_REGISTER.register("filter", () -> new Item(new Item.Properties().group(AYHackED.GROUP)));
 
     public static void register(IEventBus modEventBus) {
         ITEM_DEFERRED_REGISTER.register(modEventBus);

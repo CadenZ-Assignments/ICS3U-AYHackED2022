@@ -1,8 +1,5 @@
 package ics3u.ayhacked.utils;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-
 import java.util.*;
 import java.util.stream.Collectors;
 

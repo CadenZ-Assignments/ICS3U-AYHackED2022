@@ -6,22 +6,16 @@ import ics3u.ayhacked.water_pollution.WaterPollutionCapability;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.WaterMobEntity;
-import net.minecraft.entity.passive.fish.AbstractFishEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IChunk;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ServerForgeEvents {
     public static void worldCapAttachEvent(AttachCapabilitiesEvent<Chunk> event) {
@@ -62,6 +56,9 @@ public class ServerForgeEvents {
                 }
                 if (cap.getPollutionAmount() > 5000) {
                     livingEntity.addPotionEffect(new EffectInstance(Effects.POISON, 100));
+                }
+                if (cap.getPollutionAmount() > 8000) {
+                    livingEntity.addPotionEffect(new EffectInstance(Effects.WITHER, 100));
                 }
             });
         }
