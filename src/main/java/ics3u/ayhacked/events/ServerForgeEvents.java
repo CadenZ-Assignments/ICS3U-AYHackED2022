@@ -1,6 +1,7 @@
 package ics3u.ayhacked.events;
 
 import ics3u.ayhacked.AYHackED;
+import ics3u.ayhacked.registration.ModStructures;
 import ics3u.ayhacked.water_pollution.WaterPollutionCapProv;
 import ics3u.ayhacked.water_pollution.WaterPollutionCapability;
 import net.minecraft.entity.LivingEntity;
@@ -16,6 +17,8 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.event.world.WorldEvent;
 
 public class ServerForgeEvents {
     public static void worldCapAttachEvent(AttachCapabilitiesEvent<Chunk> event) {
@@ -62,6 +65,11 @@ public class ServerForgeEvents {
                 }
             });
         }
+    }
+
+    public static void biomeModification(final BiomeLoadingEvent event) {
+        if (event.getCategory() != Biome.Category.OCEAN) return;
+        event.getGeneration().getStructures().add(() -> ModStructures.CONFIGURED_BOAT);
     }
 
     public static void debug(ItemTossEvent event) {
