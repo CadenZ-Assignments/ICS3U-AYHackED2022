@@ -1,5 +1,6 @@
 package ics3u.ayhacked.water_pollution;
 
+import ics3u.ayhacked.AYHackED;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -14,6 +15,7 @@ public class WaterPollutionCapability {
     public static Capability<WaterPollution> WATER_POLLUTION_CAPABILITY;
 
     public static void register() {
+        AYHackED.LOGGER.info("Registering water pollution capability");
         CapabilityManager.INSTANCE.register(WaterPollution.class, new Storage(), WaterPollution::new);
     }
 

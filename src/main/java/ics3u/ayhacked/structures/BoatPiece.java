@@ -1,9 +1,10 @@
 package ics3u.ayhacked.structures;
 
 import ics3u.ayhacked.AYHackED;
+import ics3u.ayhacked.registration.ModStructures;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.tileentity.BarrelTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
@@ -55,15 +56,15 @@ public class BoatPiece {
         private Rotation rotation;
 
         public Piece(TemplateManager templateManagerIn, ResourceLocation resourceLocationIn, BlockPos pos, Rotation rotationIn) {
-            super(STStructures.RDHP, 0);
+            super(ModStructures.BOAT_PIECE_TYPE, 0);
             this.resourceLocation = resourceLocationIn;
-            this.templatePosition = pos;
+            this.templatePosition = pos.add(0, -3, 0);
             this.rotation = rotationIn;
             this.setupPiece(templateManagerIn);
         }
 
         public Piece(TemplateManager templateManagerIn, CompoundNBT tagCompound) {
-            super(STStructures.RDHP, tagCompound);
+            super(ModStructures.BOAT_PIECE_TYPE, tagCompound);
             this.resourceLocation = new ResourceLocation(tagCompound.getString("Template"));
             this.rotation = Rotation.valueOf(tagCompound.getString("Rot"));
             this.setupPiece(templateManagerIn);
@@ -95,12 +96,12 @@ public class BoatPiece {
          */
         @Override
         protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb) {
-            if ("chest".equals(function)) {
-                worldIn.setBlockState(pos, Blocks.CHEST.getDefaultState(), 2);
+            if ("barrel".equals(function)) {
+                worldIn.setBlockState(pos, Blocks.BARREL.getDefaultState(), 2);
                 TileEntity tileentity = worldIn.getTileEntity(pos);
 
-                if (tileentity instanceof ChestTileEntity) {
-//                     ((ChestTileEntity) tileentity).setLootTable(<resource_location_to_loottable>, rand.nextLong());
+                if (tileentity instanceof BarrelTileEntity) {
+//                     ((BarrelTileEntity) tileentity).setLootTable(<resource_location_to_loottable>, rand.nextLong());
                 }
             }
         }

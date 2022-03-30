@@ -13,12 +13,20 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.FlatChunkGenerator;
+import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.settings.DimensionStructuresSettings;
+import net.minecraft.world.gen.settings.StructureSeparationSettings;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerForgeEvents {
     public static void worldCapAttachEvent(AttachCapabilitiesEvent<Chunk> event) {
@@ -70,6 +78,18 @@ public class ServerForgeEvents {
     public static void biomeModification(final BiomeLoadingEvent event) {
         if (event.getCategory() != Biome.Category.OCEAN) return;
         event.getGeneration().getStructures().add(() -> ModStructures.CONFIGURED_BOAT);
+    }
+
+    public static void addDimensionalSpacing(final WorldEvent.Load event) {
+        if(event.getWorld() instanceof ServerWorld){
+            ServerWorld serverWorld = (ServerWorld)event.getWorld();
+
+            if(serverWorld.getChunkProvider().getChunkGenerator() instanceof FlatChunkGenerator && serverWorld.getDimensionKey().equals(World.OVERWORLD)) return;
+
+            Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
+            tempMap.put(ModStructures.BOAT, DimensionStructuresSettings.field_236191_b_.get(ModStructures.BOAT));
+            serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
+        }
     }
 
     public static void debug(ItemTossEvent event) {

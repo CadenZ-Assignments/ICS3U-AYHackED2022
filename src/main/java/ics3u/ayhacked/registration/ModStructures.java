@@ -1,12 +1,12 @@
 package ics3u.ayhacked.registration;
 
+import com.google.common.collect.ImmutableMap;
 import ics3u.ayhacked.AYHackED;
 import ics3u.ayhacked.structures.BoatPiece;
 import ics3u.ayhacked.structures.BoatStructure;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.gen.FlatGenerationSettings;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
@@ -21,6 +21,8 @@ public class ModStructures {
     public static StructureFeature<?, ?> CONFIGURED_BOAT = BOAT.withConfiguration(NoFeatureConfig.field_236559_b_);
 
     public static void registerStructures(RegistryEvent.Register<Structure<?>> event) {
+        AYHackED.LOGGER.info("Registering boat structure");
+
         BOAT.setRegistryName(new ResourceLocation(AYHackED.MODID, "boat"));
         event.getRegistry().register(BOAT);
         registerStructure(BOAT, new StructureSeparationSettings(16, 8, 384881743));
@@ -34,6 +36,11 @@ public class ModStructures {
     private static <F extends Structure<?>> void registerStructure(F structure, StructureSeparationSettings structureSeparationSettings)
     {
         Structure.NAME_STRUCTURE_BIMAP.put(structure.getRegistryName().toString(), structure);
-        DimensionStructuresSettings.field_236191_b_.put(structure, structureSeparationSettings);
+
+        DimensionStructuresSettings.field_236191_b_ =
+                ImmutableMap.<Structure<?>, StructureSeparationSettings>builder()
+                        .putAll(DimensionStructuresSettings.field_236191_b_)
+                        .put(structure, structureSeparationSettings)
+                        .build();
     }
 }
