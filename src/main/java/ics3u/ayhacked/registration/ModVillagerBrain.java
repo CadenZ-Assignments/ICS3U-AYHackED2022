@@ -1,8 +1,6 @@
 package ics3u.ayhacked.registration;
 
-import java.util.Optional;
 import ics3u.ayhacked.AYHackED;
-import ics3u.ayhacked.entities.SailorEntity;
 import ics3u.ayhacked.entities.WaterSensor;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.entity.ai.brain.schedule.Activity;
@@ -12,6 +10,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.Optional;
 
 public class ModVillagerBrain {
     private static final DeferredRegister<Activity> ACTIVITY_DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.ACTIVITIES, AYHackED.MODID);
