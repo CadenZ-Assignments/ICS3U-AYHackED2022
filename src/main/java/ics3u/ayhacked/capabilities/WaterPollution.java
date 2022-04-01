@@ -1,8 +1,9 @@
-package ics3u.ayhacked.water_pollution;
+package ics3u.ayhacked.capabilities;
 
+import ics3u.ayhacked.capabilities.base.ICapabilityHolder;
 import net.minecraft.nbt.CompoundNBT;
 
-public class WaterPollution {
+public class WaterPollution implements ICapabilityHolder {
     private long pollutionAmount;
 
     public WaterPollution(long pollutionAmount) {
@@ -13,12 +14,14 @@ public class WaterPollution {
         this(0);
     }
 
+    @Override
     public CompoundNBT write() {
         CompoundNBT nbt = new CompoundNBT();
         nbt.putLong("waterPollution", pollutionAmount);
         return nbt;
     }
 
+    @Override
     public void read(CompoundNBT nbt) {
         pollutionAmount = nbt.getInt("waterPollution");
     }

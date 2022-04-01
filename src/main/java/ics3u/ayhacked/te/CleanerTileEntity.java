@@ -1,6 +1,6 @@
 package ics3u.ayhacked.te;
 
-import ics3u.ayhacked.water_pollution.WaterPollutionCapability;
+import ics3u.ayhacked.registration.ModCapabilities;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -28,7 +28,7 @@ public class CleanerTileEntity extends TileEntity implements ITickableTileEntity
             progress = 0;
             return;
         }
-        ((Chunk) world.getChunk(getPos())).getCapability(WaterPollutionCapability.WATER_POLLUTION_CAPABILITY).ifPresent(cap -> {
+        ((Chunk) world.getChunk(getPos())).getCapability(ModCapabilities.WATER_POLLUTION_CAPABILITY).ifPresent(cap -> {
             if (progress == 0) {
                 progress = maxProgress;
             }

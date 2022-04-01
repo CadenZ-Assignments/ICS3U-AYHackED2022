@@ -4,7 +4,8 @@ import ics3u.ayhacked.events.ServerForgeEvents;
 import ics3u.ayhacked.registration.ModVillagerBrain;
 import ics3u.ayhacked.registration.ModItems;
 import ics3u.ayhacked.registration.ModStructures;
-import ics3u.ayhacked.water_pollution.WaterPollutionCapability;
+import ics3u.ayhacked.registration.ModCapabilities;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.chunk.Chunk;
@@ -42,9 +43,10 @@ public class AYHackED {
     public static void commonSetup(FMLCommonSetupEvent event) {
         final IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
-        WaterPollutionCapability.register();
+        ModCapabilities.register();
 
         forgeEventBus.addGenericListener(Chunk.class, ServerForgeEvents::worldCapAttachEvent);
+        forgeEventBus.addGenericListener(Entity.class, ServerForgeEvents::playerAttachEvent);
         forgeEventBus.addListener(ServerForgeEvents::itemDespawnEvent);
         forgeEventBus.addListener(ServerForgeEvents::damageFish);
         forgeEventBus.addListener(EventPriority.HIGH, ServerForgeEvents::biomeModification);

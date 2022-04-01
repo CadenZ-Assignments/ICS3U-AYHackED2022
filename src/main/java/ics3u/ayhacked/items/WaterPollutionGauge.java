@@ -1,13 +1,12 @@
 package ics3u.ayhacked.items;
 
 import ics3u.ayhacked.AYHackED;
-import ics3u.ayhacked.water_pollution.WaterPollutionCapability;
+import ics3u.ayhacked.registration.ModCapabilities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tags.FluidTags;
@@ -69,7 +68,7 @@ public class WaterPollutionGauge extends Item {
             nbt.putInt("scan_progress", progress);
             if (progress <= 0) {
                 Chunk chunk = (Chunk) worldIn.getChunk(NBTUtil.readBlockPos(posNBT));
-                chunk.getCapability(WaterPollutionCapability.WATER_POLLUTION_CAPABILITY).ifPresent(cap -> {
+                chunk.getCapability(ModCapabilities.WATER_POLLUTION_CAPABILITY).ifPresent(cap -> {
                     player.sendStatusMessage(new TranslationTextComponent("ayhacked.message.pollution_amount", (cap.getPollutionAmount()/10000f)*100f), true);
                 });
                 return;
