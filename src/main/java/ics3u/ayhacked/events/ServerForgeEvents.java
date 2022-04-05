@@ -4,6 +4,8 @@ import ics3u.ayhacked.AYHackED;
 import ics3u.ayhacked.capabilities.Thirst;
 import ics3u.ayhacked.capabilities.base.CapabilityProvider;
 import ics3u.ayhacked.capabilities.WaterPollution;
+import ics3u.ayhacked.network.Networking;
+import ics3u.ayhacked.network.SyncThirstPacket;
 import ics3u.ayhacked.registration.ModStructures;
 import ics3u.ayhacked.registration.ModCapabilities;
 import net.minecraft.entity.Entity;
@@ -11,9 +13,16 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.WaterMobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.PotionItem;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
@@ -23,11 +32,15 @@ import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
-import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.LogicalSide;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -108,7 +121,49 @@ public class ServerForgeEvents {
         }
     }
 
-    public static void debug(ItemTossEvent event) {
-        event.getEntityItem().lifespan = 100;
+    private static final int maxCooldown = 4000;
+    private static int cooldown = maxCooldown;
+
+    public static void removeThirstOvertime(TickEvent.PlayerTickEvent event) {
+        cooldown--;
+        AYHackED.LOGGER.info(cooldown);
+        if (cooldown <= 0) {
+            event.player.getCapability(ModCapabilities.THIRST_CAPABILITY).ifPresent(cap -> {
+                cap.removeThirst(1);
+                cooldown = maxCooldown;
+            });
+        }
+    }
+
+    public static void rightClick(LivingEntityUseItemEvent.Finish event) {
+        ItemStack item = event.getItem();
+        World world = event.getEntityLiving().getEntityWorld();
+        LivingEntity player = event.getEntityLiving();
+
+        if (!(player instanceof PlayerEntity)) return;
+        if (!player.isSneaking()) return;
+        if (world.isRemote()) return;
+        if (!(item.getItem() instanceof PotionItem)) return;
+        // is not water
+        if (!PotionUtils.getEffectsFromStack(item).isEmpty()) return;
+
+        player.getCapability(ModCapabilities.THIRST_CAPABILITY).ifPresent(cap -> {
+            if (!(cap.getThirst() < 10)) return;
+            cap.addThirst(1);
+            Networking.sendToClient(new SyncThirstPacket(cap.getThirst()), (ServerPlayerEntity) player);
+            player.swingArm(Hand.MAIN_HAND);
+
+            ((Chunk) world.getChunk(player.getPosition())).getCapability(ModCapabilities.WATER_POLLUTION_CAPABILITY).ifPresent(chunkCap -> {
+                if (chunkCap.getPollutionAmount() > 1000) {
+                    player.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100));
+                }
+                if (chunkCap.getPollutionAmount() > 5000) {
+                    player.addPotionEffect(new EffectInstance(Effects.POISON, 100));
+                }
+                if (chunkCap.getPollutionAmount() > 8000) {
+                    player.addPotionEffect(new EffectInstance(Effects.WITHER, 100));
+                }
+            });
+        });
     }
 }

@@ -3,6 +3,8 @@ package ics3u.ayhacked.registration;
 import ics3u.ayhacked.AYHackED;
 import ics3u.ayhacked.items.WaterPollutionGauge;
 import net.minecraft.item.Item;
+import net.minecraft.item.MusicDiscItem;
+import net.minecraft.item.Rarity;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -13,6 +15,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> WaterPollutionGauge = ITEM_DEFERRED_REGISTER.register("water_pollution_gauge", WaterPollutionGauge::new);
     public static final RegistryObject<Item> Filter = ITEM_DEFERRED_REGISTER.register("filter", () -> new Item(new Item.Properties().group(AYHackED.GROUP)));
+    public static final RegistryObject<Item> MusicDisc = ITEM_DEFERRED_REGISTER.register("boat_disc", () -> new MusicDiscItem(20000, ModSounds.BoatDiscSound, new Item.Properties().maxStackSize(1).group(AYHackED.GROUP).rarity(Rarity.RARE)));
 
     public static void register(IEventBus modEventBus) {
         ITEM_DEFERRED_REGISTER.register(modEventBus);

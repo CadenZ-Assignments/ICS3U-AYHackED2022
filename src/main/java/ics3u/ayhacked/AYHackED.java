@@ -1,10 +1,7 @@
 package ics3u.ayhacked;
 
 import ics3u.ayhacked.events.ServerForgeEvents;
-import ics3u.ayhacked.registration.ModVillagerBrain;
-import ics3u.ayhacked.registration.ModItems;
-import ics3u.ayhacked.registration.ModStructures;
-import ics3u.ayhacked.registration.ModCapabilities;
+import ics3u.ayhacked.registration.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -36,6 +33,7 @@ public class AYHackED {
         modEventBus.addListener(AYHackED::commonSetup);
         modEventBus.addGenericListener(Structure.class, AYHackED::onRegisterStructure);
         ModItems.register(modEventBus);
+        ModSounds.register(modEventBus);
         ModVillagerBrain.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -51,7 +49,8 @@ public class AYHackED {
         forgeEventBus.addListener(ServerForgeEvents::damageFish);
         forgeEventBus.addListener(EventPriority.HIGH, ServerForgeEvents::biomeModification);
         forgeEventBus.addListener(EventPriority.NORMAL, ServerForgeEvents::addDimensionalSpacing);
-        forgeEventBus.addListener(ServerForgeEvents::debug);
+        forgeEventBus.addListener(ServerForgeEvents::removeThirstOvertime);
+        forgeEventBus.addListener(ServerForgeEvents::rightClick);
     }
 
     public static void onRegisterStructure(final RegistryEvent.Register<Structure<?>> event) {

@@ -1,0 +1,11 @@
+{
+  "boat_music": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "ayhacked:boat_music",
+        "stream": true
+      }
+    ]
+  }
+}

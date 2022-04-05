@@ -10,7 +10,6 @@ import net.minecraftforge.client.gui.ForgeIngameGui;
 public class ThirstHud extends AbstractGui {
     public static final ThirstHud INSTANCE = new ThirstHud();
     private static final ResourceLocation DROPLET = new ResourceLocation(AYHackED.MODID, "textures/gui/droplet.png");
-    private static final ResourceLocation DROPLET_EMPTY = new ResourceLocation(AYHackED.MODID, "textures/gui/droplet_empty.png");
 
     private int thirst;
 
@@ -18,7 +17,7 @@ public class ThirstHud extends AbstractGui {
         this.thirst = thirst;
     }
 
-    public void render(MatrixStack mStack) {
+    public void render(MatrixStack mStack, int yOffset) {
         Minecraft mc = Minecraft.getInstance();
 
         mc.textureManager.bindTexture(DROPLET);
@@ -32,7 +31,7 @@ public class ThirstHud extends AbstractGui {
         for (int i = 0; i < 10; ++i)
         {
             int x = left - i * 8 - 12;
-            blit(mStack, x, top, getBlitOffset(), 0, 0, 16, 16, 32, 16);
+            blit(mStack, x, top + yOffset, getBlitOffset(), 0, i < thirst ? 0 : 16, 16, 16, 32, 16);
         }
     }
 }

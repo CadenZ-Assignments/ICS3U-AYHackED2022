@@ -11,7 +11,7 @@ public class Thirst implements ICapabilityHolder {
     }
 
     public Thirst() {
-        this(0);
+        this(10);
     }
 
     @Override
@@ -26,17 +26,27 @@ public class Thirst implements ICapabilityHolder {
         thirst = nbt.getInt("thirst");
     }
 
-    public void addPollution(int amount) {
-        if (thirst + amount > 10) return;
+    public void setThirst(int amount) {
+        this.thirst = amount;
+    }
+
+    public void addThirst(int amount) {
+        if (thirst + amount > 10) {
+            thirst = 10;
+            return;
+        }
         thirst += amount;
     }
 
-    public void removePollution(int amount) {
-        if (thirst - amount < 0) return;
+    public void removeThirst(int amount) {
+        if (thirst - amount < 0) {
+            thirst = 0;
+            return;
+        }
         thirst -= amount;
     }
 
-    public int getPollutionAmount() {
+    public int getThirst() {
         return thirst;
     }
 }
