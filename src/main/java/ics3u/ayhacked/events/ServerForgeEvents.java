@@ -2,12 +2,12 @@ package ics3u.ayhacked.events;
 
 import ics3u.ayhacked.AYHackED;
 import ics3u.ayhacked.capabilities.Thirst;
-import ics3u.ayhacked.capabilities.base.CapabilityProvider;
 import ics3u.ayhacked.capabilities.WaterPollution;
+import ics3u.ayhacked.capabilities.base.CapabilityProvider;
 import ics3u.ayhacked.network.Networking;
 import ics3u.ayhacked.network.SyncThirstPacket;
-import ics3u.ayhacked.registration.ModStructures;
 import ics3u.ayhacked.registration.ModCapabilities;
+import ics3u.ayhacked.registration.ModStructures;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -19,10 +19,8 @@ import net.minecraft.item.PotionItem;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.potion.PotionUtils;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
@@ -36,11 +34,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.LogicalSide;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -125,13 +120,16 @@ public class ServerForgeEvents {
     private static int cooldown = maxCooldown;
 
     public static void removeThirstOvertime(TickEvent.PlayerTickEvent event) {
-        cooldown--;
-        AYHackED.LOGGER.info(cooldown);
-        if (cooldown <= 0) {
-            event.player.getCapability(ModCapabilities.THIRST_CAPABILITY).ifPresent(cap -> {
-                cap.removeThirst(1);
-                cooldown = maxCooldown;
-            });
+        if (!event.player.getEntityWorld().isRemote()) {
+            cooldown--;
+            AYHackED.LOGGER.info(cooldown);
+            if (cooldown <= 0) {
+                event.player.getCapability(ModCapabilities.THIRST_CAPABILITY).ifPresent(cap -> {
+                    cap.removeThirst(1);
+                    Networking.sendToClient(new SyncThirstPacket(cap.getThirst()), (ServerPlayerEntity) event.player);
+                    cooldown = maxCooldown;
+                });
+            }
         }
     }
 

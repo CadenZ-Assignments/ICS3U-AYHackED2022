@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "ayhacked:block/polluter"
+    },
+    "facing=south": {
+      "y": 180,
+      "model": "ayhacked:block/polluter"
+    },
+    "facing=west": {
+      "y": 270,
+      "model": "ayhacked:block/polluter"
+    },
+    "facing=east": {
+      "y": 90,
+      "model": "ayhacked:block/polluter"
+    },
+    "facing=up": {
+      "model": "ayhacked:block/polluter"
+    },
+    "facing=down": {
+      "model": "ayhacked:block/polluter"
+    }
+  }
+}

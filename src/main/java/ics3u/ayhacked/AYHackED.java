@@ -1,6 +1,7 @@
 package ics3u.ayhacked;
 
 import ics3u.ayhacked.events.ServerForgeEvents;
+import ics3u.ayhacked.network.Networking;
 import ics3u.ayhacked.registration.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemGroup;
@@ -34,7 +35,7 @@ public class AYHackED {
         modEventBus.addGenericListener(Structure.class, AYHackED::onRegisterStructure);
         ModItems.register(modEventBus);
         ModSounds.register(modEventBus);
-        ModVillagerBrain.register(modEventBus);
+        ModBlocks.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -42,6 +43,7 @@ public class AYHackED {
         final IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
         ModCapabilities.register();
+        Networking.registerMessages();
 
         forgeEventBus.addGenericListener(Chunk.class, ServerForgeEvents::worldCapAttachEvent);
         forgeEventBus.addGenericListener(Entity.class, ServerForgeEvents::playerAttachEvent);

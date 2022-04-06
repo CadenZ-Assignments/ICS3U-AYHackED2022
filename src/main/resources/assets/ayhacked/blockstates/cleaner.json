@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "ayhacked:block/cleaner"
+    },
+    "facing=south": {
+      "y": 180,
+      "model": "ayhacked:block/cleaner"
+    },
+    "facing=west": {
+      "y": 270,
+      "model": "ayhacked:block/cleaner"
+    },
+    "facing=east": {
+      "y": 90,
+      "model": "ayhacked:block/cleaner"
+    },
+    "facing=up": {
+      "model": "ayhacked:block/cleaner"
+    },
+    "facing=down": {
+      "model": "ayhacked:block/cleaner"
+    }
+  }
+}

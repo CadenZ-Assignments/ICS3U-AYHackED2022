@@ -5,6 +5,7 @@ import ics3u.ayhacked.client.ThirstHud;
 import ics3u.ayhacked.registration.ModCapabilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.tags.FluidTags;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,11 +16,11 @@ public class ClientForgeEvent {
 
     @SubscribeEvent
     public static void renderHud(RenderGameOverlayEvent.Post event) {
-//        if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR) {
-            render(event.getMatrixStack(), 0);
-//        } else if (event.getType() == RenderGameOverlayEvent.ElementType.AIR) {
-//            render(event.getMatrixStack(), -15);
-//        }
+        if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR) {
+            PlayerEntity player = Minecraft.getInstance().player;
+            if (player == null) return;
+            render(event.getMatrixStack(), player.areEyesInFluid(FluidTags.WATER) ? -9 : 0);
+        }
     }
 
     private static void render(MatrixStack matrixStack, int yOffset) {

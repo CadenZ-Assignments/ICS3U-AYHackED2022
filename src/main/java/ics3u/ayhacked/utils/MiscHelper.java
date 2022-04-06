@@ -1,11 +1,15 @@
 package ics3u.ayhacked.utils;
 
+import ics3u.ayhacked.AYHackED;
+import net.minecraft.item.Item;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class MiscHelper {
 
     public static final double ONEPIXEL = 1D / 16;
+    public static final Item.Properties DEFAULT_PROPERTIES = new Item.Properties().group(AYHackED.GROUP);
 
     public static double randomInRange(double min, double max) {
         return (Math.random() * (max - min)) + min;
