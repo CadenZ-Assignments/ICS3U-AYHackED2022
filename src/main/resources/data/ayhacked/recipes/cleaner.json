@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SWS",
+    "WPW",
+    "SWS"
+  ],
+  "key": {
+    "P": {
+      "item": "ayhacked:polluter"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "ayhacked:cleaner"
+  }
+}

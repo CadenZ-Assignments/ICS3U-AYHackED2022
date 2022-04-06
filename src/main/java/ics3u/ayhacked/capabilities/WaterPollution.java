@@ -27,10 +27,12 @@ public class WaterPollution implements ICapabilityHolder {
     }
 
     public void addPollution(long amount) {
+        if (pollutionAmount + amount > 10000) return;
         pollutionAmount += amount;
     }
 
     public void removePollution(long amount) {
+        if (pollutionAmount - amount < 0) return;
         pollutionAmount -= amount;
     }
 

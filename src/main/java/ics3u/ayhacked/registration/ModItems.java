@@ -14,7 +14,6 @@ public class ModItems {
     private static final DeferredRegister<Item> ITEM_DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, AYHackED.MODID);
 
     public static final RegistryObject<Item> WaterPollutionGauge = ITEM_DEFERRED_REGISTER.register("water_pollution_gauge", WaterPollutionGauge::new);
-    public static final RegistryObject<Item> Filter = ITEM_DEFERRED_REGISTER.register("filter", () -> new Item(new Item.Properties().group(AYHackED.GROUP)));
     public static final RegistryObject<Item> MusicDisc = ITEM_DEFERRED_REGISTER.register("boat_disc", () -> new MusicDiscItem(20000, ModSounds.BoatDiscSound, new Item.Properties().maxStackSize(1).group(AYHackED.GROUP).rarity(Rarity.RARE)));
 
     public static void register(IEventBus modEventBus) {

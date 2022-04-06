@@ -14,13 +14,19 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.WaterMobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PotionItem;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
@@ -29,14 +35,18 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -120,38 +130,48 @@ public class ServerForgeEvents {
     private static int cooldown = maxCooldown;
 
     public static void removeThirstOvertime(TickEvent.PlayerTickEvent event) {
-        if (!event.player.getEntityWorld().isRemote()) {
+        PlayerEntity player = event.player;
+
+        if (!player.getEntityWorld().isRemote() && !player.isCreative()) {
             cooldown--;
-            AYHackED.LOGGER.info(cooldown);
             if (cooldown <= 0) {
-                event.player.getCapability(ModCapabilities.THIRST_CAPABILITY).ifPresent(cap -> {
+                player.getCapability(ModCapabilities.THIRST_CAPABILITY).ifPresent(cap -> {
                     cap.removeThirst(1);
-                    Networking.sendToClient(new SyncThirstPacket(cap.getThirst()), (ServerPlayerEntity) event.player);
+                    Networking.sendToClient(new SyncThirstPacket(cap.getThirst()), (ServerPlayerEntity) player);
                     cooldown = maxCooldown;
                 });
             }
         }
     }
 
-    public static void rightClick(LivingEntityUseItemEvent.Finish event) {
+    public static void drinkEvent(LivingEntityUseItemEvent.Finish event) {
         ItemStack item = event.getItem();
         World world = event.getEntityLiving().getEntityWorld();
         LivingEntity player = event.getEntityLiving();
 
         if (!(player instanceof PlayerEntity)) return;
-        if (!player.isSneaking()) return;
         if (world.isRemote()) return;
         if (!(item.getItem() instanceof PotionItem)) return;
         // is not water
         if (!PotionUtils.getEffectsFromStack(item).isEmpty()) return;
 
+        drink((PlayerEntity) player);
+    }
+
+    public static void playerLogIn(PlayerEvent.PlayerLoggedInEvent event) {
+        PlayerEntity player = event.getPlayer();
+        if (player.getEntityWorld().isRemote()) return;
+        player.getCapability(ModCapabilities.THIRST_CAPABILITY).ifPresent(cap -> Networking.sendToClient(new SyncThirstPacket(cap.getThirst()), (ServerPlayerEntity) event.getPlayer()));
+    }
+
+    private static void drink(@Nonnull PlayerEntity player) {
         player.getCapability(ModCapabilities.THIRST_CAPABILITY).ifPresent(cap -> {
             if (!(cap.getThirst() < 10)) return;
             cap.addThirst(1);
             Networking.sendToClient(new SyncThirstPacket(cap.getThirst()), (ServerPlayerEntity) player);
             player.swingArm(Hand.MAIN_HAND);
 
-            ((Chunk) world.getChunk(player.getPosition())).getCapability(ModCapabilities.WATER_POLLUTION_CAPABILITY).ifPresent(chunkCap -> {
+            ((Chunk) player.getEntityWorld().getChunk(player.getPosition())).getCapability(ModCapabilities.WATER_POLLUTION_CAPABILITY).ifPresent(chunkCap -> {
                 if (chunkCap.getPollutionAmount() > 1000) {
                     player.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 100));
                 }

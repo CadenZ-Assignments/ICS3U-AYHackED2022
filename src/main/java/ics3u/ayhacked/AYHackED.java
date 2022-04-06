@@ -52,7 +52,8 @@ public class AYHackED {
         forgeEventBus.addListener(EventPriority.HIGH, ServerForgeEvents::biomeModification);
         forgeEventBus.addListener(EventPriority.NORMAL, ServerForgeEvents::addDimensionalSpacing);
         forgeEventBus.addListener(ServerForgeEvents::removeThirstOvertime);
-        forgeEventBus.addListener(ServerForgeEvents::rightClick);
+        forgeEventBus.addListener(ServerForgeEvents::drinkEvent);
+        forgeEventBus.addListener(ServerForgeEvents::playerLogIn);
     }
 
     public static void onRegisterStructure(final RegistryEvent.Register<Structure<?>> event) {
